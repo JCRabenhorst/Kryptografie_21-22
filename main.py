@@ -127,7 +127,7 @@ def draw_curve():
 
 # calling the calculations
 TwoA = ec_add(A, A)
-AandB = ec_add(TwoA, B)
+AandB = ec_add(A, B)
 print("Two A's ", TwoA, " | A and B ", AandB)
 
 # draw the curve
