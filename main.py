@@ -1,7 +1,6 @@
 import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
-import pylab as pl
 
 matplotlib.use('TkAgg')
 
@@ -11,70 +10,61 @@ Point = namedtuple("Point", "x y")
 
 # The point at infinity (origin for the group law).
 O = 'Origin'
+result = Point
+
+'''
+###############################
+# Made by Julia C. Rabenhorst #
+###############################
+
+Points are not pictured perfectly, because floats.
+If you choose new a and b values, you HAVE TO set new A and B points.
+
+Tested Points:
+a = 1, b = 1, A = (-0.6, 0.428952...), B = (0, 1)
+a = 0, b = 0, A = (1, 1), B = (2, 2.828427...)
+'''
 
 # Choose a particular curve and prime.  We assume that p > 3.
 p = 15733
 a = 1
 b = 1
 z = np.sqrt(((-0.6)**3)+((-0.6)*a)+b)
-# Change P to match the a and b results (no floats)
-P = Point(-0.6, z)
-Q = Point(0, 1)
-R = Point(2, 3103)
 
-result = Point
+# Change A and B to match the a and b results
+A = Point(-0.6, z)
+B = Point(0, 1)
 
-'''''
-def valid(q):
-    global P
-    x = int(P.x)
-    y = int(P.y)
-    """
-    Determine whether we have a valid representation of a point
-    on our curve.  We assume that the x and y coordinates
-    are always reduced modulo p, so that we can compare
-    two points for equality with a simple ==.
-    """
-    if q == O:
-        return True
-    else:
-        return (
-            (y**2 - (x**3 + a*x + b)) % p == 0 and
-            0 <= x < p and 0 <= y < p)
-'''
 
-def inv_mod_p(x):
+def inv_mod_p(r):
     """
     Compute an inverse for x modulo p, assuming that x
     is not divisible by p.
     """
-    x = float(x)
-    if x % p == 0:
+    r = float(r)
+    if r % p == 0:
         raise ZeroDivisionError("Impossible inverse")
-    return x**(p-2)%p
+    return r**(p-2) % p
 
 
-def ec_inv(q):
-    global P
+def ec_inv(w):
+    global A
     """
     Inverse of the point P on the elliptic curve y^2 = x^3 + ax + b.
     """
-    if q == O:
-        return q
-    return Point(P.x, (-P.y) % p)
+    if w == O:
+        return w
+    return Point(A.x, (-A.y) % p)
 
 
 def ec_add(s, t):
     global result
-    global P
-    global Q
+    global A
+    global B
     """
     Sum of the points P and Q on the elliptic curve y^2 = x^3 + ax + b.
     """
-   # if not (valid(s) and valid(t)):
-    #    raise ValueError("Invalid inputs")
-
-    # Deal with the special cases where either P, Q, or P + Q is
+    # Deal with the special cases where either A, B, or A + B is
     # the origin.
     if s.x and s.y == O:
         result = t
@@ -84,116 +74,61 @@ def ec_add(s, t):
         result = O
     else:
         # Cases not involving the origin.
-        print(s.x, s.y, " aa| ", t)
         if float(s.x) == t:
-            print("hi")
-            dydx = (3 * P.x**2 + a) / (2 * P.y)
+            dydx = (3 * A.x**2 + a) / (2 * A.y)
             result = dydx
         else:
-            dydx = (Q.y - P.y) / (Q.x - P.x)
-            x = (dydx ** 2 + P.x + Q.x) #% p
-            y = -(dydx * (x - P.x) + P.y) #% p
+            dydx = (B.y - A.y) / (B.x - A.x)
+            x = (dydx ** 2 + A.x + B.x)
+            y = -(dydx * (x - A.x) + A.y)
             result = Point(x, y)
-
-            # The above computations *should* have given us another point
+            # The above computations SHOULD have given us another point
             # on the curve.
-     #   assert valid(result)
         return result
 
 
+def draw_curve():
+    # setting up the grid
+    y, x = np.ogrid[-5:5:100j, -5:5:100j]
+    plt.contour(x.ravel(), y.ravel(), pow(y, 2) - pow(x, 3) - x * a - b, [0])
+    plt.grid()
 
-s = type(P.x)
-print(P.x, " aaaa ", P.y, s)
-TwoP = ec_add(P, P)
-ThreeP = ec_add(TwoP, Q)
-# Compute 4P two different ways.
-# assert ec_add(P, ThreeP) == ec_add(TwoP, TwoP)
-# Check the associative law.
-# assert ec_add(P, ec_add(Q, R)) == ec_add(ec_add(P, Q), R)
+    # plotting the points
+    plt.plot(A.x, A.y, marker='o', markerfacecolor='blue', markersize=5, label="A")
+    plt.plot(B.x, B.y, marker='o', markerfacecolor='red', markersize=5)
+    plt.plot(TwoA.x, -TwoA.y, marker='o', markerfacecolor='yellow', markersize=5)
+    plt.plot(TwoA.x, TwoA.y, marker='o', markerfacecolor='purple', markersize=5)
+    # plt.plot(AandB.x, -AandB.y, marker='o', markerfacecolor='yellow', markersize=5)
+    # plt.plot(AandB.x, AandB.y, marker='o', markerfacecolor='purple', markersize=5)
 
-print("Twp P ", TwoP, " | Three Points ", ThreeP)
-'''''
-# setting the x - coordinates
-x = np.arange(0, 2, 0.1)
-# setting the corresponding y - coordinates
-y = np.sqrt(x**3 + a*x + b)
-'''
-y, x = np.ogrid[-10:10:100j, -10:10:100j]
-plt.contour(x.ravel(), y.ravel(), pow(y, 2) - pow(x, 3) - x * a - b, [0])
-plt.grid()
-'''''
-# poltting the points
-plt.plot(x, y)
-'''
-# plotting the points
-plt.plot(P.x, P.y, marker='o', markerfacecolor='blue', markersize=5)
-plt.plot(Q.x, Q.y, marker='o', markerfacecolor='red', markersize=5)
-plt.plot(ThreeP.x, ThreeP.y, marker='o', markerfacecolor='purple', markersize=5)
-# function to show the plot
-plt.show()
+    # labeling the points
+    plt.text(A.x, A.y, 'A', horizontalalignment='right')
+    plt.text(B.x, B.y, 'B', horizontalalignment='right')
+    plt.text(TwoA.x, -TwoA.y, 'x3', horizontalalignment='right')
+    plt.text(TwoA.x, TwoA.y, 'C', horizontalalignment='left')
+    # plt.text(AandB.x, -AandB.y, 'x3', horizontalalignment='right')
+    # plt.text(AandB.x, AandB.y, 'C', horizontalalignment='left')
 
+    # setting the line points
+    x1 = [A.x, B.x, TwoA.x]
+    y1 = [A.y, B.y, -TwoA.y]
+    x2 = [TwoA.x, TwoA.x]
+    y2 = [-TwoA.y, TwoA.y]
+    # x2 = [AandB.x, AandB.x]
+    # y2 = [-AandB.y, AandB.y]
 
+    # plotting the lines
+    plt.plot(x1, y1, color='orange')
+    plt.plot(x2, y2, color='green')
 
-'''import matplotlib
-import matplotlib.pyplot as plt
-import numpy as np
-
-matplotlib.use('TkAgg')
-print("hi")
-
-import numpy as np
-import pylab as pl
-
-Y, X = np.mgrid[-10:10:100j, -10:10:100j]
-#a = -1
-#b = 1
+    # function to show the plot
+    plt.show()
 
 
-def f(x):
-    return x**3 -3*x + 5
+# calling the calculations
+TwoA = ec_add(A, A)
+AandB = ec_add(TwoA, B)
+print("Two A's ", TwoA, " | A and B ", AandB)
 
-
-# blauer punkt spiegel C
-px = -2.0
-py = -np.sqrt(f(px))
-
-# orangener punkt C
-qx = 0.5
-qy = np.sqrt(f(qx))
-
-k = (qy - py)/(qx - px)
-b = -px*k + py
-wert = ((qy - py)/(qx - px))**2 + qx + px
-poly = np.poly1d([-1, k**2, 2*k*b+3, b**2-5])
-
-x = np.roots(poly)
-y = np.sqrt(f(x))
-
-pl.contour(X, Y, Y**2 - f(X), levels=[0])
-pl.plot(x, y, "o")
-pl.plot(x, -y, "o")
-
-x = np.linspace(-5, 5)
-pl.plot(x, k*x+b)
-
-########
-#a = -1  # standard value -1
-#b = 1   # standard value 1
-
-#y, x = np.ogrid[-5:5:100j, -5:5:100j]
-#plt.contour(x.ravel(), y.ravel(), pow(y, 2) - pow(x, 3) - x * a - b, [0])
-#plt.grid()
-plt.show()
-print("k ", k, " px ", px, " py ", py, " qx ", qx, " qy ", qy, " x3 ", wert)
-
-# setting the x - coordinates
-#x = np.arange(0, 1, 0.1)
-# setting the corresponding y - coordinates
-#y = np.sin(x)
-
-# plotting the points
-#plt.plot(x, y)
-
-# function to show the plot
-#plt.show()'''
-
+# draw the curve
+draw_curve()
