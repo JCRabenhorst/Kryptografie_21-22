@@ -1,3 +1,5 @@
+import locale
+
 import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
@@ -132,3 +134,14 @@ print("Two A's ", TwoA, " | A and B ", AandB)
 
 # draw the curve
 draw_curve()
+
+# Extra stuff
+# (A + B) + C
+v = (A.x + B.x) + AandB.x
+b = (A.y + B.y) + AandB.y
+print(v, b)
+
+# A + (B + C)
+n = A.x + (B.x + AandB.x)
+m = A.y + (B.y + AandB.y)
+print(n, m)
