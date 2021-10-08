@@ -16,14 +16,15 @@ O = 'Origin'
 p = 15733
 a = 1
 b = 1
-
-P = Point(0, 1)
-Q = Point(8, 1267)
+z = np.sqrt(((-0.6)**3)+((-0.6)*a)+b)
+# Change P to match the a and b results (no floats)
+P = Point(-0.6, z)
+Q = Point(0, 1)
 R = Point(2, 3103)
 
 result = Point
 
-
+'''''
 def valid(q):
     global P
     x = int(P.x)
@@ -40,16 +41,17 @@ def valid(q):
         return (
             (y**2 - (x**3 + a*x + b)) % p == 0 and
             0 <= x < p and 0 <= y < p)
-
+'''
 
 def inv_mod_p(x):
     """
     Compute an inverse for x modulo p, assuming that x
     is not divisible by p.
     """
+    x = float(x)
     if x % p == 0:
         raise ZeroDivisionError("Impossible inverse")
-    return pow(x, p - 2, p)
+    return x**(p-2)%p
 
 
 def ec_inv(q):
@@ -69,33 +71,33 @@ def ec_add(s, t):
     """
     Sum of the points P and Q on the elliptic curve y^2 = x^3 + ax + b.
     """
-    if not (valid(s) and valid(t)):
-        raise ValueError("Invalid inputs")
+   # if not (valid(s) and valid(t)):
+    #    raise ValueError("Invalid inputs")
 
     # Deal with the special cases where either P, Q, or P + Q is
     # the origin.
-    if s == O:
+    if s.x and s.y == O:
         result = t
-    elif t == O:
+    elif t.x and t.y == O:
         result = s
     elif t == ec_inv(s):
         result = O
     else:
         # Cases not involving the origin.
-        print(s, " | ", t)
-        if s == t:
+        print(s.x, s.y, " aa| ", t)
+        if float(s.x) == t:
             print("hi")
-            dydx = (3 * P.x**2 + a) * inv_mod_p(2 * P.y)
+            dydx = (3 * P.x**2 + a) / (2 * P.y)
             result = dydx
         else:
-            dydx = (Q.y - P.y) * inv_mod_p(Q.x - P.x)
-            x = (dydx ** 2 - P.x - Q.x) % p
-            y = (dydx * (P.x - x) - P.y) % p
+            dydx = (Q.y - P.y) / (Q.x - P.x)
+            x = (dydx ** 2 + P.x + Q.x) #% p
+            y = -(dydx * (x - P.x) + P.y) #% p
             result = Point(x, y)
 
             # The above computations *should* have given us another point
             # on the curve.
-        assert valid(result)
+     #   assert valid(result)
         return result
 
 
@@ -103,7 +105,7 @@ def ec_add(s, t):
 s = type(P.x)
 print(P.x, " aaaa ", P.y, s)
 TwoP = ec_add(P, P)
-ThreeP = ec_add(TwoP, P)
+ThreeP = ec_add(TwoP, Q)
 # Compute 4P two different ways.
 # assert ec_add(P, ThreeP) == ec_add(TwoP, TwoP)
 # Check the associative law.
@@ -116,15 +118,21 @@ x = np.arange(0, 2, 0.1)
 # setting the corresponding y - coordinates
 y = np.sqrt(x**3 + a*x + b)
 '''
-y, x = np.ogrid[-5:5:100j, -5:5:100j]
+y, x = np.ogrid[-10:10:100j, -10:10:100j]
 plt.contour(x.ravel(), y.ravel(), pow(y, 2) - pow(x, 3) - x * a - b, [0])
 plt.grid()
 '''''
 # poltting the points
 plt.plot(x, y)
 '''
+# plotting the points
+plt.plot(P.x, P.y, marker='o', markerfacecolor='blue', markersize=5)
+plt.plot(Q.x, Q.y, marker='o', markerfacecolor='red', markersize=5)
+plt.plot(ThreeP.x, ThreeP.y, marker='o', markerfacecolor='purple', markersize=5)
 # function to show the plot
 plt.show()
+
+
 
 '''import matplotlib
 import matplotlib.pyplot as plt
