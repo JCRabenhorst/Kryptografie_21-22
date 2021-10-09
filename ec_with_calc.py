@@ -50,7 +50,7 @@ def ec_add(s, t):
     global A
     global B
     """
-    Sum of the points P and Q on the elliptic curve y^2 = x^3 + ax + b.
+    Sum of the points P and Q on the elliptic curve y^2 = x^3 + ax + b
     """
     # Deal with the special cases where either A, B, or A + B is the origin
     if s.x and s.y == Ori:
