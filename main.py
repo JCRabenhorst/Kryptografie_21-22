@@ -1,5 +1,3 @@
-import locale
-
 import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
@@ -18,7 +16,7 @@ result = Point
 ###############################
 # Made by Julia C. Rabenhorst #
 ###############################
-* with help from StackOverflow :P
+                                * with help from StackOverflow :P
 
 Points are not pictured perfectly, because floats.
 If you choose new a and b values, you HAVE TO set new A and B points.
@@ -128,21 +126,23 @@ def draw_curve():
     plt.show()
 
 
+def extra_stuff():
+    # (A + B) + C
+    v = (A.x + B.x) + AandB.x
+    b = (A.y + B.y) + AandB.y
+    print("(A + B) + C = (", v, "|", b, ")")
+
+    # A + (B + C)
+    n = A.x + B.x + AandB.x
+    m = A.y + B.y + AandB.y
+    print("A + B + C = (", n, "|", m, ")")
+
+
 # calling the calculations
 TwoA = ec_add(A, A)
 AandB = ec_add(A, B)
-print("Two A's ", TwoA, " | A and B ", AandB)
+print("Two A's ", TwoA)
+print("A and B ", AandB)
 
-# draw the curve
+extra_stuff()
 draw_curve()
-
-# Extra stuff
-# (A + B) + C
-v = (A.x + B.x) + AandB.x
-b = (A.y + B.y) + AandB.y
-print(v, b)
-
-# A + (B + C)
-n = A.x + (B.x + AandB.x)
-m = A.y + (B.y + AandB.y)
-print(n, m)
