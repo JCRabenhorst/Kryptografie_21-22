@@ -18,6 +18,7 @@ result = Point
 ###############################
 # Made by Julia C. Rabenhorst #
 ###############################
+* with help from StackOverflow :P
 
 Points are not pictured perfectly, because floats.
 If you choose new a and b values, you HAVE TO set new A and B points.
