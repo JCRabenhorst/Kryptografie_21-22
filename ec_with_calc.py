@@ -66,7 +66,7 @@ def ec_add(s, t):
             result = dydx
         else:
             dydx = (B.y - A.y) / (B.x - A.x)
-            x = (dydx ** 2 + A.x + B.x)
+            x = (dydx ** 2 - A.x - B.x)
             y = -(dydx * (x - A.x) + A.y)
             result = Point(x, y)
             # The above computations SHOULD have given us another point on the curve

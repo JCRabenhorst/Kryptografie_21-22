@@ -2,8 +2,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 # y^2 = x^3 + ax + b
-a = -1
-b = 0
+a = 4
+b = 7
 
 # setting up the grid and curve
 y, x = np.ogrid[-5:5:100j, -5:5:100j]
