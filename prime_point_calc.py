@@ -4,6 +4,8 @@ import numpy as np
 
 # Create a Point to represent the points.
 from collections import namedtuple
+from numpy import *
+
 Point = namedtuple("Point", "x y")
 matplotlib.use('TkAgg')
 result = Point
@@ -29,6 +31,7 @@ ylist = []
 x3list = []
 yclist = []
 point_list = []
+added_point_list = []
 
 # y^2 = x^3 + ax + b
 
@@ -56,9 +59,8 @@ if (((b ** 2) / 4) + ((a ** 3) / 27)) % prime != 0:
     print("pos 3", squares[3-1], "| item 4", squares.index(4)+1)
     print("bbb", xlist, " | ", ylist)
 
-# setting up the grid and curve
+# setting up the grid
 y, x = np.ogrid[-5:5:100j, -5:5:100j]
-plt.contour(x.ravel(), y.ravel(), (y**2) - (x**3) - x * a - b, [0])
 plt.grid()
 
 # scatterplot
@@ -70,19 +72,38 @@ for v in range(point_list.__len__()):
 
 print("scatterplot points (primed points): ", point_list)
 
-plt.show()
 
-# adding two points
-for x in range(xlist.__len__() - 1):
-    for y in range(ylist.__len__() - 1):
-        dxdy = (ylist[y+1] - ylist[y]) / (xlist[x+1] - xlist[x])
-        print("m = ", dxdy)
-        x3 = ((dxdy**2) - xlist[x] - xlist[x+1]) % prime
-        yc = -((dxdy * (x3 - xlist[x]) + ylist[y])) % prime
-        print("x3 ", x3, " | yc ", yc)
+def two_points():
+    # adding two points
+    for u in range(xlist.__len__() - 1):
+        for z in range(ylist.__len__() - 1):
+            dxdy = (ylist[z+1] - ylist[z]) / (xlist[u+1] - xlist[u])
+            print("m = ", dxdy)
+            x3 = ((dxdy**2) - xlist[u] - xlist[u+1]) % prime
+            yc = -((dxdy * (x3 - xlist[u]) + ylist[z])) % prime
+            plt.scatter(x3, yc, label="stars", color="orange",
+                        marker="*", s=30)
+            print("x3 ", x3, " | yc ", yc)
+            x3 = int(x3)
+            yc = int(yc)
+            print("u", u)
 
-        '''
+            for i in range(point_list.__len__()):
+                if point_list[i].x == x3:
+                    if point_list[i].y == yc:
+                        print("here", x3, yc)
+                        plt.scatter(x3, yc, label="stars", color="cyan",
+                                    marker="*", s=30)
+                        added_point_list.append(Point(x3, yc))
+
+
+two_points()
+print("added points", added_point_list)
+
+'''
         x und y ausrechnen
         scatterplot machen
         verschiedene punkte addieren (tabelle machen)
         '''
+
+plt.show()
