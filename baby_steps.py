@@ -10,24 +10,21 @@ matplotlib.use('TkAgg')
 result = Point
 
 '''
-###############################
-# Made by Julia C. Rabenhorst #
-###############################
-                                * with help from StackOverflow :P
-
-scatterplot shows the prime shifted points
-
-prime examples: 
-2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, 101, 103, 107, 109, 
+using y^2 = x^3 + ax + b
+scatterplot shows the primed points
+primes: 
+13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, 101, 103, 107, 109, 
 113, 127, 131, 137, 139, 149, 151, 157, 163, 167, 173, 179, 181, 191, 193, 197, 199, 211, 223, 227, 229, 233, 239, 
 241, 251, 257, 263, 269, 271, 277, 281, ...
-
 i ONLY make the positive points, NO NEGATIVE POINTS, so some points are MISSING
 '''
 
-a = 4
-b = 7
-prime = 13
+#################
+a = 4           #
+b = 7           # box of things to set
+prime = 13      #
+#################
+
 squares = []
 xlist = []
 ylist = []
@@ -36,14 +33,12 @@ yclist = []
 point_list = []
 added_point_list = []
 added_point_equal_existing_point_list = []
-
 menge_list = []
 
-# y^2 = x^3 + ax + b
 
 # making the list of squares
 for x in range(1, prime):
-    x2 = (x ** 2) % 13
+    x2 = (x ** 2) % prime
     squares.append(x2)
 
 # checking if x result has square counterpart
@@ -96,7 +91,6 @@ def two_points():
             plt.scatter(x3, yc, label="stars", color="orange",
                         marker="*", s=30)
             added_point_list.append(Point(x3, yc))
-
             # check if added point equals existing scatterplot point
             for i in range(point_list.__len__()):
                 if point_list[i].x == x3:
@@ -104,10 +98,8 @@ def two_points():
                         plt.scatter(x3, yc, label="stars", color="cyan",
                                     marker="*", s=30)
                         added_point_equal_existing_point_list.append(Point(x3, yc))
-            
+
             # point squared'''
-
-
 
     # print("added points", added_point_list)
     # print("added points that equal existing point", added_point_equal_existing_point_list)
@@ -133,8 +125,9 @@ def two_points():
 
 two_points()  # if you want the added points, leave active. if you only want scatterplot, comment out
 
+
 # punkt als menge (x,y); ((x,y)+(x,y)); ((x,y)+(x,y)+(x,y)) .... bis y-y = 0 (zyklisch)
-# added point stelle 9 ( x = 8, y = 8)
+# added point stelle 9 (x = 8, y = 8)
 
 
 def mengen():
@@ -155,4 +148,4 @@ def mengen():
 
 mengen()
 print("menge", menge_list)
-# plt.show()
+plt.show()
