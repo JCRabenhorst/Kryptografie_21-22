@@ -11,12 +11,30 @@ result = Point
 
 '''
 using y^2 = x^3 + ax + b
-scatterplot shows the primed points
 primes: 
 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, 101, 103, 107, 109, 
 113, 127, 131, 137, 139, 149, 151, 157, 163, 167, 173, 179, 181, 191, 193, 197, 199, 211, 223, 227, 229, 233, 239, 
 241, 251, 257, 263, 269, 271, 277, 281, ...
-i ONLY make the positive points, NO NEGATIVE POINTS, so some points are MISSING
+i ONLY make the positive points, NO NEGATIVE POINTS, so some points are missing
+
+------------------------------------------------------------------------------------------------------------------------
+
+Graphic point help:
+- normal points = green
+- square added points = black
+- square added points equal normal point = yellow
+- different added points = orange
+- different added points equal normal points = cyan
+
+------------------------------------------------------------------------------------------------------------------------
+
+At prime 127 (took 2 minutes):
+- scatterplot points (primed points): 126 points in total 
+- All added points: 7688 points in total, with 64 points equal to scatterplot points
+- Square added points: 3844 points in total, with 0 points equal to scatterplot points
+- different added points: 3844 points in total, with 64 points equal to scatterplot points
+- counter für menge, stelle 9: counter 3843
+- primzahlzerlegung: [3, 3, 7, 61]
 '''
 
 #################
@@ -32,8 +50,13 @@ x3list = []
 yclist = []
 point_list = []
 added_point_list = []
+col_added_point_list = []
+added_same_point_list = []
+added_dif_point_list = []
 added_point_equal_existing_point_list = []
 menge_list = []
+count_list = []
+new_count_list = []
 
 
 # making the list of squares
@@ -76,6 +99,7 @@ def two_points():
             plt.scatter(xx3, yyc, label="stars", color="black",
                         marker="*", s=30)
             added_point_list.append(Point(xx3, yyc))
+            added_same_point_list.append(Point(xx3, yyc))
 
             # check if added point equals existing scatterplot point
             for i in range(point_list.__len__()):
@@ -85,12 +109,13 @@ def two_points():
                                     marker="*", s=30)
                         added_point_equal_existing_point_list.append(Point(xx3, yyc))
 
-            '''dxdy = (ylist[z + 1] - ylist[z]) / (xlist[u + 1] - xlist[u])
+            dxdy = (ylist[z + 1] - ylist[z]) / (xlist[u + 1] - xlist[u])
             x3 = ((dxdy ** 2) - xlist[u] - xlist[u + 1]) % prime
             yc = -(dxdy * (x3 - xlist[u]) + ylist[z]) % prime
             plt.scatter(x3, yc, label="stars", color="orange",
                         marker="*", s=30)
             added_point_list.append(Point(x3, yc))
+            added_dif_point_list.append(Point(x3, yc))
             # check if added point equals existing scatterplot point
             for i in range(point_list.__len__()):
                 if point_list[i].x == x3:
@@ -99,53 +124,113 @@ def two_points():
                                     marker="*", s=30)
                         added_point_equal_existing_point_list.append(Point(x3, yc))
 
-            # point squared'''
-
-    # print("added points", added_point_list)
-    # print("added points that equal existing point", added_point_equal_existing_point_list)
+    # square_added = 0
+    # dif_added = 0
+    # making my lists look pretty
+    '''
     for i in range(len(added_point_list)):
         for j in range(len(added_point_equal_existing_point_list)):
             if added_point_list[i] == added_point_equal_existing_point_list[j]:
                 added_point_list[i] = Fore.RED + str(added_point_list[i]) + Fore.RESET
+    
+    for i in range(len(added_same_point_list)):
+        for j in range(len(added_point_equal_existing_point_list)):
+            if added_same_point_list[i] == added_point_equal_existing_point_list[j]:
+                added_same_point_list[i] = Fore.RED + str(added_same_point_list[i]) + Fore.RESET
+                square_added += 1
 
-    print("added points, red are the ones where they coincide with existing points: \n",
+    for i in range(len(added_dif_point_list)):
+        for j in range(len(added_point_equal_existing_point_list)):
+            if added_dif_point_list[i] == added_point_equal_existing_point_list[j]:
+                added_dif_point_list[i] = Fore.RED + str(added_dif_point_list[i]) + Fore.RESET
+                dif_added += 1
+    '''
+
+    print("ALL added points, red are the ones where they coincide with existing points: \n",
           ', '.join(str(item) for item in added_point_list), "\n", len(added_point_list), "points in total, with",
           len(added_point_equal_existing_point_list), "points equal to scatterplot points")
+    print("------------------------------------------------------------------------------------")
+    print("Square added points, red are the ones where they coincide with existing points: \n",
+          ', '.join(str(item) for item in added_same_point_list), "\n", len(added_same_point_list), "points in total")
+    print("------------------------------------------------------------------------------------")
+    print("Different added points, red are the ones where they coincide with existing points: \n",
+          ', '.join(str(item) for item in added_dif_point_list), "\n", len(added_dif_point_list), "points in total")
+    print("------------------------------------------------------------------------------------")
 
 
 # end of two point calc
-''' TODO:
-    - multiplizierten punkt als menge (quadriert besser als 2 punkte)
-    - menge machen bis id, wie viele schritte? -> untermenge
-    -----------
-    - in testmenge reinschieben
-    - verschieben (2l + 1 zur seite springen (schablone verschieben)
-    - id bzw #1 finden
-'''
-
 two_points()  # if you want the added points, leave active. if you only want scatterplot, comment out
 
 
 # punkt als menge (x,y); ((x,y)+(x,y)); ((x,y)+(x,y)+(x,y)) .... bis y-y = 0 (zyklisch)
 # added point stelle 9 (x = 8, y = 8)
 
+def primes(n):
+    primfac = []
+    d = 2
+    while d*d <= n:
+        while (n % d) == 0:
+            primfac.append(d)  # supposing you want multiple factors repeated
+            n //= d
+        d += 1
+    if n > 1:
+        primfac.append(n)
+    print("Primzahlzerlegung: ", primfac)
 
-def mengen():
+
+def mengen(n):
     count = 1
-    menge_list.append(Point(added_point_list[9].x, added_point_list[9].y))
-    mathex = (added_point_list[9].x + added_point_list[9].x) % prime
-    mathey = (added_point_list[9].y + added_point_list[9].y) % prime
+    menge_list.clear()
+    menge_list.append(Point(added_point_list[n].x, added_point_list[n].y))
+    mathex = (added_point_list[n].x + added_point_list[n].x) % prime
+    mathey = (added_point_list[n].y + added_point_list[n].y) % prime
     menge_list.append(Point(mathex, mathey))
-    for i in range(1, added_point_list.__len__()):
-        mathex = (menge_list[i].x + menge_list[0].x) % prime
-        mathey = (menge_list[i].y + menge_list[0].y) % prime
-        menge_list.append(Point(mathex, mathey))
-        count += 1
+    for i in range(1, 100):
         if menge_list[-1].y == menge_list[0].y:
             break
+        else:
+            mathex = (menge_list[i].x + menge_list[0].x) % prime
+            mathey = (menge_list[i].y + menge_list[0].y) % prime
+            menge_list.append(Point(mathex, mathey))
+            count += 1
+    # remove last item because double
+    menge_list.pop()
+    print("menge", menge_list)
     print("counter", count)
+    count_list.append(count)
+    # primes(count)   # primfaktorzerlegung; macht nix, wenn count ne prime ist
 
 
-mengen()
-print("menge", menge_list)
+for i in range(1, added_point_list.__len__()):
+    mengen(i)
+    # tut nicht wie ich will weil floats
+print("countliste: ", count_list)
+
+# 100er entfernen
+for i in range(count_list.__len__()):
+    if count_list[i] != 100:
+        new_count_list.append(count_list[i])
+print("neue countliste: ", new_count_list)
+
+# kgv ohne die 100er
+kgv = np.lcm.reduce(new_count_list)
+print("kgv von neuer countliste: ", kgv)
+
+
+def hasse():
+    minimum = prime + 1 - (2 * np.sqrt(prime))
+    maximum = prime + 1 + (2 * np.sqrt(prime))
+    print("Hasse-Intervall von: ", minimum, " ------------ ", prime, " ------------ ", maximum)
+
+
+hasse()
 plt.show()
+
+''' TODO:
+    - kgv = gruppengröße
+    - gruppengröße im bereich hasse intervall
+    - testmenge machen
+    - in testmenge reinschieben
+    - verschieben (2l + 1 zur seite springen (schablone verschieben)
+    - id bzw #1 finden
+'''
