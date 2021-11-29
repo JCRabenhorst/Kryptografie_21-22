@@ -46,7 +46,7 @@ for x in range(1, prime):
 
 # checking if x result has square counterpart
 if (((b ** 2) / 4) + ((a ** 3) / 27)) % prime != 0:
-    for x in range(1, prime):
+    for x in range(0, prime):
         y = ((x ** 3) + (a * x) + b) % prime
         if y in squares:
             pd4 = int((prime + 1)/4)
@@ -71,16 +71,16 @@ for v in range(point_list.__len__()):
     e = point_list[v].x
     f = point_list[v].y
     plt.scatter(e, f, label="stars", color="green",
-                marker="*", s=30)
-print("scatterplot points (primed points): ", point_list, "\n", len(point_list), "points in total \n")
+               marker="o", s=70)
+print("scatterplot points (green circles): ", point_list, "\n", len(point_list), "points in total \n")
 
 
 def two_points():
     for i in range(len(xlist)):
+        x1 = xlist[i]
+        y1 = ylist[i]
         for j in range(i + 1, len(xlist)):
             # different points
-            x1 = xlist[i]
-            y1 = ylist[i]
             x2 = xlist[j]
             y2 = ylist[j]
             if x1 != x2:
@@ -88,30 +88,30 @@ def two_points():
                 M = ((y2 - y1) * nenner) % prime
                 M2 = (M*M) % prime
                 x3 = (M2 - x1 - x2) % prime
-                y3 = -(M * (x3 - x1) + y1) % prime
+                y3 = (M * (x1 - x3) - y1) % prime
                 # print("aaaaaa", x1, y1, x2, y2, x3, y3)
                 plt.scatter(x3, y3, label="stars", color="red", marker="*", s=30)
                 added_point_list.append(Point(x3, y3))
                 added_dif_point_list.append(Point(x3, y3))
-        '''
-        # same points // PROBLEMS
+        # same points
         nenner2 = ((2 * y1)**(prime - 2)) % prime
-        M3 = ((3 * x1 + a) * nenner2) % prime
+        M3 = ((3 * (x1**2) + a) * nenner2) % prime
         M4 = (M3*M3) % prime
         xx3 = (M4 - (2 * x1)) % prime
-        yy3 = -(M3 * (xx3 - x1) + y1) % prime
-        print("bbbbb", x1, y1, xx3, yy3)
-        plt.scatter(xx3, yy3, label="stars", color="blue", marker="*", s=30)
+        yy3 = (M3 * (x1 - xx3) - y1) % prime
+        # print("bbbbb", x1, y1, xx3, yy3)
+
+        plt.scatter(xx3, yy3, label="stars", color="blue", marker="x", s=60)
         added_point_list.append(Point(xx3, yy3))
-        added_same_point_list.append(Point(xx3, yy3))'''
+        added_same_point_list.append(Point(xx3, yy3))
 
     print("ALL added points: \n", ', '.join(str(item) for item in added_point_list), "\n", len(added_point_list),
           "points in total")
     print("------------------------------------------------------------------------------------")
-    print("Square added points: \n",
+    print("Square added points (blue crosses): \n",
           ', '.join(str(item) for item in added_same_point_list), "\n", len(added_same_point_list), "points in total")
     print("------------------------------------------------------------------------------------")
-    print("Different added points: \n",
+    print("Different added points (red stars): \n",
           ', '.join(str(item) for item in added_dif_point_list), "\n", len(added_dif_point_list), "points in total")
     print("------------------------------------------------------------------------------------")
 
@@ -137,9 +137,9 @@ def primes(n):
 def mengen(n):
     count = 1
     menge_list.clear()
-    menge_list.append(Point(added_dif_point_list[n].x, added_dif_point_list[n].y))
-    mathex = (added_dif_point_list[n].x + added_dif_point_list[n].x) % prime
-    mathey = (added_dif_point_list[n].y + added_dif_point_list[n].y) % prime
+    menge_list.append(Point(added_same_point_list[n].x, added_same_point_list[n].y))
+    mathex = (added_same_point_list[n].x + added_same_point_list[n].x) % prime
+    mathey = (added_same_point_list[n].y + added_same_point_list[n].y) % prime
     menge_list.append(Point(mathex, mathey))
     for i in range(1, 500):
         if menge_list[-1].y == menge_list[0].y:
@@ -151,26 +151,18 @@ def mengen(n):
             count += 1
     # remove last item because double
     menge_list.pop()
-    # print("menge", menge_list)
+    print("menge", menge_list)
     print("counter", count)
     count_list.append(count)
     # primes(count)   # primfaktorzerlegung; macht nix, wenn count ne prime ist
 
 
-for i in range(added_dif_point_list.__len__()):
+for i in range(added_same_point_list.__len__()):
     mengen(i)
-    # tut nicht wie ich will weil floats
 print("countliste: ", count_list)
 
-# 100er entfernen
-for i in range(count_list.__len__()):
-    if count_list[i] != 500:
-        new_count_list.append(count_list[i])
-print("neue countliste: ", new_count_list)
-
-# kgv ohne die 100er
-kgv = np.lcm.reduce(new_count_list)
-print("kgv von neuer countliste: ", kgv)
+kgv = np.lcm.reduce(count_list)
+print("kgv von countliste: ", kgv)
 
 
 def hasse():
@@ -181,7 +173,41 @@ def hasse():
 
 hasse()
 
-plt.show()
+for i in range(len(xlist)):
+    x1 = xlist[i]
+    y1 = ylist[i]
+    x2 = x1
+    y2 = y1
+    k = 0
+    print((x1, y1), end='')
+    x3 = 4711
+    y3 = 4711
+    while True:
+        if x1 != x2:
+            nenner = ((x2 - x1) ** (prime - 2)) % prime
+            M = ((y2 - y1) * nenner) % prime
+            M2 = (M * M) % prime
+            x3 = (M2 - x1 - x2) % prime
+            y3 = -(M * (x3 - x1) + y1) % prime
+        else:
+            nenner = ((2 * y1) ** (prime - 2)) % prime
+            M3 = ((3 * (x1 ** 2) + a) * nenner) % prime
+            M4 = (M3 * M3) % prime
+            x3 = (M4 - (2 * x1)) % prime
+            y3 = (M3 * (x1 - x3) - y1) % prime
+        print((x3, y3), end='')
+        x2 = x3
+        y2 = y3
+        k += 1
+        if x3 == x1:
+            break
+        # print(x3 == x1)
+        if k > 75:
+            break
+    print()
+
+
+# plt.show()
 
 ''' TODO:
     - kgv = gruppengröße
