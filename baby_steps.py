@@ -38,6 +38,9 @@ menge_list = []
 count_list = []
 new_count_list = []
 
+xlist.append(0)
+ylist.append(0)
+point_list.append(Point(0, 0))
 
 # making the list of squares
 for x in range(1, prime):
@@ -83,23 +86,24 @@ def two_points():
             # different points
             x2 = xlist[j]
             y2 = ylist[j]
-            if x1 != x2:
-                nenner = ((x2 - x1) ** (prime - 2)) % prime
-                M = ((y2 - y1) * nenner) % prime
-                M2 = (M*M) % prime
-                x3 = (M2 - x1 - x2) % prime
-                y3 = (M * (x1 - x3) - y1) % prime
-                # print("aaaaaa", x1, y1, x2, y2, x3, y3)
-                plt.scatter(x3, y3, label="stars", color="red", marker="*", s=30)
-                added_point_list.append(Point(x3, y3))
-                added_dif_point_list.append(Point(x3, y3))
+            if x1 != 0:
+                if x1 != x2:
+                    nenner = ((x2 - x1) ** (prime - 2)) % prime
+                    M = ((y2 - y1) * nenner) % prime
+                    M2 = (M*M) % prime
+                    x3 = (M2 - x1 - x2) % prime
+                    y3 = (M * (x1 - x3) - y1) % prime
+                    # print("aaaaaa", x1, y1, x2, y2, x3, y3)
+                    plt.scatter(x3, y3, label="stars", color="red", marker="*", s=30)
+                    added_point_list.append(Point(x3, y3))
+                    added_dif_point_list.append(Point(x3, y3))
         # same points
         nenner2 = ((2 * y1)**(prime - 2)) % prime
         M3 = ((3 * (x1**2) + a) * nenner2) % prime
         M4 = (M3*M3) % prime
         xx3 = (M4 - (2 * x1)) % prime
         yy3 = (M3 * (x1 - xx3) - y1) % prime
-        # print("bbbbb", x1, y1, xx3, yy3)
+        # print("bbbbb", x1, y1, nenner2, xx3, yy3)
 
         plt.scatter(xx3, yy3, label="stars", color="blue", marker="x", s=60)
         added_point_list.append(Point(xx3, yy3))
@@ -188,7 +192,7 @@ for i in range(len(xlist)):
             M = ((y2 - y1) * nenner) % prime
             M2 = (M * M) % prime
             x3 = (M2 - x1 - x2) % prime
-            y3 = -(M * (x3 - x1) + y1) % prime
+            y3 = (M * (x1 - x3) - y1) % prime
         else:
             nenner = ((2 * y1) ** (prime - 2)) % prime
             M3 = ((3 * (x1 ** 2) + a) * nenner) % prime
@@ -200,6 +204,7 @@ for i in range(len(xlist)):
         y2 = y3
         k += 1
         if x3 == x1:
+            print((x1, y1), "gruppengröße:", k + 2, end='')
             break
         # print(x3 == x1)
         if k > 75:
@@ -207,7 +212,7 @@ for i in range(len(xlist)):
     print()
 
 
-# plt.show()
+plt.show()
 
 ''' TODO:
     - kgv = gruppengröße
