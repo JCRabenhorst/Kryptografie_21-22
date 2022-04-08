@@ -12,11 +12,6 @@ Ori = 'Origin'
 result = Point
 
 '''
-###############################
-# Made by Julia C. Rabenhorst #
-###############################
-                                * with help from StackOverflow :P
-
 If you choose new a and b values, you HAVE TO set new A and B points.
 
 Tested Points:
