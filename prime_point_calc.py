@@ -9,12 +9,7 @@ Point = namedtuple("Point", "x y")
 matplotlib.use('TkAgg')
 result = Point
 
-'''
-###############################
-# Made by Julia C. Rabenhorst #
-###############################
-                                * with help from StackOverflow :P
-                                
+'''                                
 scatterplot shows the prime shifted points
 
 prime examples: 
